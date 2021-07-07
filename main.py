@@ -30,7 +30,13 @@ def main():
             _model.model.load_state_dict(state_dict,strict = False)
         _loss = loss.Loss(args, checkpoint) if not args.test_only else None
         t = Trainer(args, loader, _model, _loss, checkpoint)
-        t.test()
+        if args.test_only:
+            t.test()
+        else:
+            while not t.terminate():
+                t.train()
+                t.test()
+        
         checkpoint.done()
             
 if __name__ == '__main__':
